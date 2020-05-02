@@ -47,8 +47,8 @@ async def add_new_filter(new_handler):
     except AttributeError:
         await new_handler.edit("`Running on Non-SQL mode!`")
         return
-    value = new_handler.pattern_match.group(1).split(None, 1)
-    """ - The first words after .filter(space) is the keyword - """
+    value = new_handler.pattern_match.group(1).split(',', 1)
+    """ - Separate between keyword and reply text with ',' - """
     keyword = value[0]
     try:
         string = value[1]
@@ -59,8 +59,11 @@ async def add_new_filter(new_handler):
     if msg and msg.media and not string:
         if BOTLOG_CHATID:
             await new_handler.client.send_message(
-                BOTLOG_CHATID, f"#FILTER\nCHAT ID: {new_handler.chat_id}\nTRIGGER: {keyword}"
-                "\n\nThe following message is saved as the filter's reply data for the chat, please do NOT delete it !!"
+                BOTLOG_CHATID,
+                "#FILTER\n"
+                f"CHAT ID: {new_handler.chat_id}\nTRIGGER: {keyword}"
+                "\n\nThe following message is saved as the filter's reply data"
+                " for the chat, please do NOT delete it !!"
             )
             msg_o = await new_handler.client.forward_messages(
                 entity=BOTLOG_CHATID,
@@ -146,12 +149,14 @@ CMD_HELP.update({
     "filter":
     ">`.filters`"
     "\nUsage: Lists all active userbot filters in a chat."
-    "\n\n>`.filter <keyword> <reply text>` or reply to a message with >`.filter <keyword>`"
+    "\n\n>`.filter <keyword>, <reply text>` or reply to a message with "
+    ">`.filter <keyword>`"
     "\nUsage: Saves the replied message as a reply to the 'keyword'."
     "\nThe bot will reply to the message whenever 'keyword' is mentioned."
     "\nWorks with everything from files to stickers."
     "\n\n>`.stop <filter>`"
     "\nUsage: Stops the specified filter."
     "\n\n>`.rmbotfilters <marie/rose>`"
-    "\nUsage: Removes all filters of admin bots (Currently supported: Marie, Rose and their clones.) in the chat."
+    "\nUsage: Removes all filters of admin bots "
+    "(Currently supported: Marie, Rose and their clones.) in the chat."
 })
